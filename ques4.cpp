@@ -1,94 +1,94 @@
-//QUES 4(i)
+#include<iostream>
+using namespace std;
+
 int main(){
-	int n;
-	cout<<"Enter how many elements you want to add: ";
-	cin>>n;
-	int arr[n];
-	cout<<"\nEnter the elements: \n";
-	for(int i=0;i<n;i++){
-		cin>>arr[n-1-i];
-	}
-	cout<<"reversed array: ";
-	for(int i=0;i<n;i++){
-		cout<<arr[i];
-	}
-	
-}
 
-// QUES 4(ii)
-int main() {
-    int m, n;
-    int i, j;
+    //PART A
 
-    cout << "Enter the rows and columns for the first matrix: ";
-    cin >> m >> n;
+    // string s1;
+    // string s2;
+    // cout << "enter 2 strings : " << endl;
+    // cin >> s1;
+    // cin >> s2;
 
-    cout << "Enter the rows and columns for the second matrix: ";
-    cin >> i >> j;
+    // string s3;
+    // int n = s1.length();
+    // int m = s2.length();
+    // for(int i=0;i<n;i++){
+    //     s3[i] = s1[i];
+    // }
+    //  for(int j=0;j<m;j++){
+    //     s3[n+j] = s2[j];
+    // }
+    // cout << "concatenated string is : " << " " << endl; 
+    // for(int i=0;i<n+m;i++){
+    //     cout << s3[i];
+    //     }
 
+    //PART B
+
+//     string s1;
+//     cout << "enter string" << " " << endl;
+//     cin >> s1;
+//     int n = s1.length();
+//     int i = 0;
+//     int j = n-1;
+//     while(i<=j){
+//         swap(s1[i],s1[j]);
+//         i++;
+//         j--;
+//     }
+//     cout << s1;
+
+ // PART C
+//    string s1;
+//     cout << "enter string" << " " << endl;
+//     cin >> s1;
+//     int n = s1.length();
+//     string s2;
+//     int k = 0;
+//     for(int i=0;i<n;i++){
+//         if(s1[i] != 'a' && s1[i] != 'e' && s1[i] != 'i' && s1[i] != 'o' && s1[i] != 'u'){
+//             s2[k] = s1[i];
+//             k++;
+//         }
+//     } 
+//     if(k==0) cout << "all string elements are vowel" << endl;
+//     for(int i=0;i<=k;i++){
+//     cout << s2[i];
+//     }
+    
+// PART D
    
-    if (n != i) {
-        cout << "Multiplication cannot be performed.\n";
-        return 1; 
-    }
+    // string s1;
+    // cout << "enter string" << " " << endl;
+    // cin >> s1;
+    // int n = s1.length();
+    // for(int j=0; j<n; j++){
+    //     for(int k=0; k < n - j - 1; k++){
+    //         if(s1[k] > s1[k+1]){
+    //             int temp = s1[k];
+    //             s1[k] = s1[k+1];
+    //             s1[k+1] = temp;
+    //         }
+    //     }
+    // }   
+    // for(int i=0;i<n;i++){
+    //     cout << s1[i];
+    // } 
 
-    int arr1[m][n];
-    int arr2[i][j];
-    int arr3[m][j]; 
+    // PART E
 
-    cout << "\nEnter elements for the first matrix:\n";
-    for (int row = 0; row < m; row++) {
-        for (int col = 0; col < n; col++) {
-            cin >> arr1[row][col];
-        }
-    }
+    // string s1;
+    // cout << "enter string" << " " << endl;
+    // cin >> s1;
+    // int n = s1.length();
+    // for(int i=0;i<n;i++){
+    //     s1[i] = s1[i] - 32;
+    // }
 
-    cout << "\nEnter elements for the second matrix:\n";
-    for (int row = 0; row < i; row++) {
-        for (int col = 0; col < j; col++) {
-            cin >> arr2[row][col];
-        }
-    }
-
-    for (int rowA = 0; rowA < m; rowA++) {
-        for (int colB = 0; colB < j; colB++) {
-            int sum = 0;
-            for (int k = 0; k < n; k++) {
-                sum += arr1[rowA][k] * arr2[k][colB];
-            }
-            arr3[rowA][colB] = sum;
-        }
-    }
-
-    cout << "\nmatrix after multiplication:\n";
-    for (int row = 0; row < m; row++) {
-        for (int col = 0; col < j; col++) {
-            cout << arr3[row][col] << " ";
-        }
-        cout << endl;
-    }
-
+    // for(int i=0;i<n;i++){
+    //     cout << s1[i];
+    // } 
     return 0;
-}
-
-// QUES 4(iii)
-int main(){
-	int i,j;
-	cout<<"Enter number rows and cols: \n";
-	cin>>i>>j;
-	cout<<"Enter the values: \n";
-	int arr[i][j];
-	for(int row=0;row<i;row++){
-		for(int col=0;col<j;col++){
-			cin>>arr[row][col];
-		}
-	}
-	cout<<"Transpose of the matrix is: \n";
-	for(int row=0;row<i;row++){
-		for(int col=0;col<j;col++){
-			cout<<arr[col][row]<< " ";
-		}
-		cout <<"\n";
-	}
-	return 0;
-}
+ }

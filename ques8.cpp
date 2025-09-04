@@ -2,9 +2,9 @@
 using namespace std;
 
 int main(){
-    int arr[100];
-    int n;
-
+    int  arr[100];
+    int arr2[100];
+    int n,k=0;
     cout << "enter size of array " << endl;
     cin >> n;
     cout << "enter array" << endl;
@@ -22,11 +22,18 @@ int main(){
         }
     }
 
-    cout << "sorted order is" << endl;
-    for(int i=0; i<n; i++){
-        cout << arr[i] << " ";
+    k = 0;
+    for(int i = 0; i < n; i++) {
+        if (i == 0 || arr[i] != arr[i - 1]) {
+            arr2[k] = arr[i];
+            k++;
+        }
+    }
+
+    cout << "Distinct elements are: " <<endl;
+    for(int i = 0; i < k; i++) {
+        cout << arr2[i] << " ";
     }
     cout << endl;
-
     return 0;
 }
