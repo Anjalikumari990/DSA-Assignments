@@ -1,31 +1,31 @@
-#include<iostream>
+#include <iostream>
+#include <cstring>
 using namespace std;
 
-int main(){
-    int arr[100];
-    int n;
+#define MAX 100
 
-    cout << "enter size of array " << endl;
-    cin >> n;
-    cout << "enter array" << endl;
-    for(int i=0; i<n; i++){
-        cin >> arr[i];
-    }
+class Stack {
+    char arr[MAX];
+    int top;
+public:
+    Stack() { top = -1; }
+    bool isEmpty() { return top == -1; }
+    bool isFull() { return top == MAX - 1; }
+    void push(char c) { if (!isFull()) arr[++top] = c; }
+    char pop() { if (!isEmpty()) return arr[top--]; return '\0'; }
+};
 
-    for(int j=0; j<n; j++){
-        for(int k=0; k < n - j - 1; k++){
-            if(arr[k] > arr[k+1]){
-                int temp = arr[k];
-                arr[k] = arr[k+1];
-                arr[k+1] = temp;
-            }
-        }
-    }
+int main() {
+    char str[MAX];
+    cout << "Enter a string: ";
+    cin >> str;
+    int len = strlen(str);
 
-    cout << "sorted order is" << endl;
-    for(int i=0; i<n; i++){
-        cout << arr[i] << " ";
-    }
+    Stack st;
+    for (int i = 0; i < len; i++) st.push(str[i]);
+
+    cout << "Reversed string: ";
+    for (int i = 0; i < len; i++) cout << st.pop();
     cout << endl;
 
     return 0;
