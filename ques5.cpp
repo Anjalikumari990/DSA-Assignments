@@ -1,58 +1,53 @@
-#include<iostream>
+#include <iostream>
+#include <string.h>
 using namespace std;
 
+#define MAX 100
+int stackArr[MAX];
+int top = -1;
+
+void push(int x) {
+    if (top == MAX - 1) {
+        cout << "Stack Overflow\n";
+        return;
+    }
+    stackArr[++top] = x;
+}
+
+int pop() {
+    if (top == -1) {
+        cout << "Stack Underflow\n";
+        return -1;
+    }
+    return stackArr[top--];
+}
+
+int calc(int a, int b, char c){
+    switch(c){
+        case '+': return a + b; break;
+        case '-': return a - b; break;
+        case '*': return a * b; break;
+        case '/': return a / b; break;
+    }
+}
+
 int main(){
-    int arr1[3][3] = {1,2,3,4,5,6,7,8,9};
-    int flag = 0;
+    char s [100];
+    cout << "Enter your postfix function:";
+    cin >> s;
 
-    //PART A
-    // for(int i=0;i<3;i++){
-    //     for(int j=0;j<3;j++){
-    //         if(i == j){
-    //             cout << arr1[i][j] << " ";
-    //         }
-    //     }
-    // }
-    // cout << endl;
+    for(int i = 0; s[i] != 0; i++){
+        if(isdigit (s[i])){
+            s[i] = s[i] - '0';
+            push s[i];
+        }
+        if((s[i] == '*') || (s[i] == '/') || (s[i] == '+') || (s[i] == '-')){
 
-    //PART C  UPPER TRI
-    // for(int i=0;i<3;i++){
-    //     for(int j=0;j<3;j++){
-    //         if(j>=i){
-    //             cout << arr1[i][j] << " ";
-    //         }
-    //     }
-    // }
-    // cout << endl;
-
-    //PART D  LOWER TRI
-    // for(int i=0;i<3;i++){
-    //     for(int j=0;j<3;j++){
-    //         if(j<=i){
-    //             cout << arr1[i][j] << " ";
-    //         }
-    //     }
-    // }
-    // cout << endl;
-
-    //PART E SYMMETRIC MATRIX
-    // int arr2[3][3] = {1,1,1,1,1,1,1,1,1};
-    // for(int i=0;i<3;i++){
-    //     for(int j=0;j<3;j++){
-    //         if(arr2[i][j] == arr2[j][i]){    // can use arr1 also
-    //             flag = 1;
-    //         }
-    //         else{
-    //             flag = 0;
-    //             break;
-    //         }
-    //     }
-    // }
-    // if(flag == 1){
-    //     cout << "its a symmetric matrix" << endl;
-    // }
-    // else{
-    //     cout << "its not a symmetric matrix" << endl;
-    // }
-    return 0;
+        }
+        int a = pop();
+        int b = pop();
+        c = calc(a, b, s[i]);
+        push(s);
+    }
+    
 }

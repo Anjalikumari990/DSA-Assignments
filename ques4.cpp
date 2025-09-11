@@ -1,94 +1,107 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-int main(){
+#define MAX 100
 
-    //PART A
+class Stack {
+    char arr[MAX];
+    int top;
+public:
+    Stack() { top = -1; }
 
-    // string s1;
-    // string s2;
-    // cout << "enter 2 strings : " << endl;
-    // cin >> s1;
-    // cin >> s2;
+    void push(char c) {
+        if (top == MAX - 1) {
+            cout << "Stack Overflow\n";
+            return;
+        }
+        arr[++top] = c;
+    }
 
-    // string s3;
-    // int n = s1.length();
-    // int m = s2.length();
-    // for(int i=0;i<n;i++){
-    //     s3[i] = s1[i];
-    // }
-    //  for(int j=0;j<m;j++){
-    //     s3[n+j] = s2[j];
-    // }
-    // cout << "concatenated string is : " << " " << endl; 
-    // for(int i=0;i<n+m;i++){
-    //     cout << s3[i];
-    //     }
+    char pop() {
+        if (top == -1) {
+            return '\0';
+        }
+        return arr[top--];
+    }
 
-    //PART B
+    char peek() {
+        if (top == -1) return '\0';
+        return arr[top];
+    }
 
-//     string s1;
-//     cout << "enter string" << " " << endl;
-//     cin >> s1;
-//     int n = s1.length();
-//     int i = 0;
-//     int j = n-1;
-//     while(i<=j){
-//         swap(s1[i],s1[j]);
-//         i++;
-//         j--;
-//     }
-//     cout << s1;
+    bool isEmpty() {
+        return top == -1;
+    }
+};
 
- // PART C
-//    string s1;
-//     cout << "enter string" << " " << endl;
-//     cin >> s1;
-//     int n = s1.length();
-//     string s2;
-//     int k = 0;
-//     for(int i=0;i<n;i++){
-//         if(s1[i] != 'a' && s1[i] != 'e' && s1[i] != 'i' && s1[i] != 'o' && s1[i] != 'u'){
-//             s2[k] = s1[i];
-//             k++;
-//         }
-//     } 
-//     if(k==0) cout << "all string elements are vowel" << endl;
-//     for(int i=0;i<=k;i++){
-//     cout << s2[i];
-//     }
-    
-// PART D
-   
-    // string s1;
-    // cout << "enter string" << " " << endl;
-    // cin >> s1;
-    // int n = s1.length();
-    // for(int j=0; j<n; j++){
-    //     for(int k=0; k < n - j - 1; k++){
-    //         if(s1[k] > s1[k+1]){
-    //             int temp = s1[k];
-    //             s1[k] = s1[k+1];
-    //             s1[k+1] = temp;
-    //         }
-    //     }
-    // }   
-    // for(int i=0;i<n;i++){
-    //     cout << s1[i];
-    // } 
 
-    // PART E
+int precedence(char op) {
+    switch (op) {
+        case '^': return 3;
+        case '*':
+        case '/': return 2;
+        case '+':
+        case '-': return 1;
+        default: return 0;
+    }
+}
 
-    // string s1;
-    // cout << "enter string" << " " << endl;
-    // cin >> s1;
-    // int n = s1.length();
-    // for(int i=0;i<n;i++){
-    //     s1[i] = s1[i] - 32;
-    // }
 
-    // for(int i=0;i<n;i++){
-    //     cout << s1[i];
-    // } 
+bool isOperand(char c) {
+    return ( (c >= 'A' && c <= 'Z') ||
+             (c >= 'a' && c <= 'z') ||
+             (c >= '0' && c <= '9') );
+}
+
+
+void infixToPostfix(char exp[]) {
+    Stack s;
+    char postfix[MAX];
+    int i = 0, k = 0;
+
+    while (exp[i] != '\0') {
+        char c = exp[i];
+
+        
+        if (isOperand(c)) {
+            postfix[k++] = c;
+        }
+        
+        else if (c == '(') {
+            s.push(c);
+        }
+        
+        else if (c == ')') {
+            while (!s.isEmpty() && s.peek() != '(') {
+                postfix[k++] = s.pop();
+            }
+            s.pop(); 
+        }
+        
+        else {
+            while (!s.isEmpty() && precedence(s.peek()) >= precedence(c)) {
+                postfix[k++] = s.pop();
+            }
+            s.push(c);
+        }
+        i++;
+    }
+
+
+    while (!s.isEmpty()) {
+        postfix[k++] = s.pop();
+    }
+
+    postfix[k] = '\0';
+    cout << "Postfix Expression: " << postfix << endl;
+}
+
+int main() {
+    char expression[MAX];
+    cout << "Enter Infix Expression: ";
+    cin >> expression;  
+
+    infixToPostfix(expression);
+
     return 0;
- }
+}
