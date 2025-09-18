@@ -2,23 +2,22 @@
 #define MAX 5
 using namespace std;
 
-class CircularQueue {
+class Queue {
     int arr[MAX];
     int front, rear;
 public:
-    CircularQueue() { front = -1; rear = -1; }
+    Queue() { front = -1; rear = -1; }
 
     bool isEmpty() { return (front == -1); }
-    bool isFull() { return ((rear + 1) % MAX == front); }
+    bool isFull() { return (rear == MAX - 1); }
 
     void enqueue(int x) {
         if (isFull()) {
             cout << "Queue is Full!\n";
             return;
         }
-        if (isEmpty()) front = 0;
-        rear = (rear + 1) % MAX;
-        arr[rear] = x;
+        if (front == -1) front = 0;
+        arr[++rear] = x;
         cout << x << " enqueued.\n";
     }
 
@@ -29,7 +28,7 @@ public:
         }
         cout << arr[front] << " dequeued.\n";
         if (front == rear) front = rear = -1;
-        else front = (front + 1) % MAX;
+        else front++;
     }
 
     void peek() {
@@ -43,29 +42,24 @@ public:
             return;
         }
         cout << "Queue: ";
-        int i = front;
-        while (true) {
-            cout << arr[i] << " ";
-            if (i == rear) break;
-            i = (i + 1) % MAX;
-        }
+        for (int i = front; i <= rear; i++) cout << arr[i] << " ";
         cout << endl;
     }
 };
 
 int main() {
-    CircularQueue cq;
+    Queue q;
     int choice, val;
     do {
-        cout << "\n--- Circular Queue Menu ---\n";
+        cout << "\n--- Simple Queue Menu ---\n";
         cout << "1. Enqueue\n2. Dequeue\n3. Peek\n4. Display\n5. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
         switch (choice) {
-        case 1: cout << "Enter value: "; cin >> val; cq.enqueue(val); break;
-        case 2: cq.dequeue(); break;
-        case 3: cq.peek(); break;
-        case 4: cq.display(); break;
+        case 1: cout << "Enter value: "; cin >> val; q.enqueue(val); break;
+        case 2: q.dequeue(); break;
+        case 3: q.peek(); break;
+        case 4: q.display(); break;
         }
     } while (choice != 5);
     return 0;

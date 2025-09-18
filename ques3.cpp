@@ -1,96 +1,53 @@
 #include <iostream>
 using namespace std;
 
-#define MAX 100
-
-char stack[MAX];
-int top = -1;
-
-
-void push(char c) {
-    if (top == MAX - 1) {
-        cout << "Stack Overflow\n";
-        return;
+class Queue {
+    int arr[20];
+    int front, rear, size;
+public:
+    Queue(int n=20) { front = rear = -1; size = n; }
+    bool isEmpty() { return (front == -1); }
+    bool isFull() { return (rear == size-1); }
+    void enqueue(int x) {
+        if (isFull()) return;
+        if (front == -1) front = 0;
+        arr[++rear] = x;
     }
-    stack[++top] = c;
-}
-
-char pop() {
-    if (top == -1) {
-        return '\0';
+    int dequeue() {
+        if (isEmpty()) return -1;
+        int x = arr[front];
+        if (front == rear) front = rear = -1;
+        else front++;
+        return x;
     }
-    return stack[top--];
-}
-
-char peek() {
-    if (top == -1) return '\0';
-    return stack[top];
-}
-
-int isEmpty() {
-    return top == -1;
-}
-
-
-int precedence(char op) {
-    if (op == '^') return 3;
-    if (op == '*' || op == '/' || op == '%') return 2;
-    if (op == '+' || op == '-') return 1;
-    return 0;
-}
-
-
-int isOperator(char c) {
-    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '%');
-}
-
-
-void infixToPostfix(char infix[], char postfix[]) {
-    int j = 0;
-    for (int i = 0; infix[i] != '\0'; i++) {
-        char c = infix[i];
-
-        
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
-            postfix[j++] = c;
-        }
-        
-        else if (c == '(') {
-            push(c);
-        }
-        
-        else if (c == ')') {
-            while (!isEmpty() && peek() != '(') {
-                postfix[j++] = pop();
-            }
-            pop(); 
-        }
-        
-        else if (isOperator(c)) {
-            while (!isEmpty() && precedence(peek()) >= precedence(c)) {
-                postfix[j++] = pop();
-            }
-            push(c);
-        }
+    int peek() { return isEmpty() ? -1 : arr[front]; }
+    int length() { return isEmpty()?0:rear-front+1; }
+    void display() {
+        for (int i=front; i<=rear; i++) cout<<arr[i]<<" ";
+        cout<<endl;
     }
+};
 
-    
-    while (!isEmpty()) {
-        postfix[j++] = pop();
+void interleaveQueue(Queue &q) {
+    int n = q.length();
+    if (n % 2 != 0) { cout << "Queue size must be even\n"; return; }
+
+    Queue firstHalf(n);
+    int half = n/2;
+
+    for (int i=0;i<half;i++) firstHalf.enqueue(q.dequeue());
+
+    while (!firstHalf.isEmpty()) {
+        q.enqueue(firstHalf.dequeue());
+        q.enqueue(q.dequeue());
     }
-
-    postfix[j] = '\0'; 
 }
 
 int main() {
-    char infix[MAX], postfix[MAX];
+    Queue q(20);
+    int arr[] = {4,7,11,20,5,9};
+    for (int x : arr) q.enqueue(x);
 
-    cout << "Enter an infix expression: ";
-    cin >> infix;
-
-    infixToPostfix(infix, postfix);
-
-    cout << "Postfix expression: " << postfix << endl;
-
-    return 0;
+    interleaveQueue(q);
+    q.display(); // Output: 4 20 7 5 11 9
 }

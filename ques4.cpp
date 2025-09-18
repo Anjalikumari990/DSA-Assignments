@@ -1,107 +1,41 @@
 #include <iostream>
 using namespace std;
 
-#define MAX 100
-
-class Stack {
-    char arr[MAX];
-    int top;
+class Queue {
+    char arr[100];
+    int front, rear;
 public:
-    Stack() { top = -1; }
-
-    void push(char c) {
-        if (top == MAX - 1) {
-            cout << "Stack Overflow\n";
-            return;
-        }
-        arr[++top] = c;
+    Queue() { front = rear = -1; }
+    bool isEmpty() { return (front == -1); }
+    void enqueue(char x) {
+        if (front == -1) front = 0;
+        arr[++rear] = x;
     }
-
-    char pop() {
-        if (top == -1) {
-            return '\0';
-        }
-        return arr[top--];
+    void dequeue() {
+        if (isEmpty()) return;
+        if (front == rear) front = rear = -1;
+        else front++;
     }
-
-    char peek() {
-        if (top == -1) return '\0';
-        return arr[top];
-    }
-
-    bool isEmpty() {
-        return top == -1;
-    }
+    char peek() { return isEmpty() ? '#' : arr[front]; }
 };
 
+void firstNonRepeating(string s) {
+    int freq[256] = {0};
+    Queue q;
 
-int precedence(char op) {
-    switch (op) {
-        case '^': return 3;
-        case '*':
-        case '/': return 2;
-        case '+':
-        case '-': return 1;
-        default: return 0;
+    for (char ch : s) {
+        freq[ch]++;
+        q.enqueue(ch);
+
+        while (!q.isEmpty() && freq[q.peek()] > 1) q.dequeue();
+
+        if (q.isEmpty()) cout << "-1 ";
+        else cout << q.peek() << " ";
     }
-}
-
-
-bool isOperand(char c) {
-    return ( (c >= 'A' && c <= 'Z') ||
-             (c >= 'a' && c <= 'z') ||
-             (c >= '0' && c <= '9') );
-}
-
-
-void infixToPostfix(char exp[]) {
-    Stack s;
-    char postfix[MAX];
-    int i = 0, k = 0;
-
-    while (exp[i] != '\0') {
-        char c = exp[i];
-
-        
-        if (isOperand(c)) {
-            postfix[k++] = c;
-        }
-        
-        else if (c == '(') {
-            s.push(c);
-        }
-        
-        else if (c == ')') {
-            while (!s.isEmpty() && s.peek() != '(') {
-                postfix[k++] = s.pop();
-            }
-            s.pop(); 
-        }
-        
-        else {
-            while (!s.isEmpty() && precedence(s.peek()) >= precedence(c)) {
-                postfix[k++] = s.pop();
-            }
-            s.push(c);
-        }
-        i++;
-    }
-
-
-    while (!s.isEmpty()) {
-        postfix[k++] = s.pop();
-    }
-
-    postfix[k] = '\0';
-    cout << "Postfix Expression: " << postfix << endl;
+    cout << endl;
 }
 
 int main() {
-    char expression[MAX];
-    cout << "Enter Infix Expression: ";
-    cin >> expression;  
-
-    infixToPostfix(expression);
-
-    return 0;
+    string s = "aabc";
+    firstNonRepeating(s); // Output: a -1 b b
 }
