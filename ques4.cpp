@@ -1,41 +1,32 @@
 #include <iostream>
 using namespace std;
 
-class Queue {
-    char arr[100];
-    int front, rear;
-public:
-    Queue() { front = rear = -1; }
-    bool isEmpty() { return (front == -1); }
-    void enqueue(char x) {
-        if (front == -1) front = 0;
-        arr[++rear] = x;
-    }
-    void dequeue() {
-        if (isEmpty()) return;
-        if (front == rear) front = rear = -1;
-        else front++;
-    }
-    char peek() { return isEmpty() ? '#' : arr[front]; }
-};
+struct Node { int data; Node* next; };
+Node* head = NULL;
 
-void firstNonRepeating(string s) {
-    int freq[256] = {0};
-    Queue q;
+void insertEnd(int val) {
+    Node* newNode = new Node{val,NULL};
+    if(!head){ head=newNode; return; }
+    Node* temp=head;
+    while(temp->next) temp=temp->next;
+    temp->next=newNode;
+}
 
-    for (char ch : s) {
-        freq[ch]++;
-        q.enqueue(ch);
+void display() {
+    Node* temp=head;
+    while(temp){ cout<<temp->data<<" -> "; temp=temp->next; }
+    cout<<"NULL\n";
+}
 
-        while (!q.isEmpty() && freq[q.peek()] > 1) q.dequeue();
-
-        if (q.isEmpty()) cout << "-1 ";
-        else cout << q.peek() << " ";
-    }
-    cout << endl;
+void reverseList() {
+    Node *prev=NULL, *curr=head, *next=NULL;
+    while(curr){ next=curr->next; curr->next=prev; prev=curr; curr=next; }
+    head=prev;
 }
 
 int main() {
-    string s = "aabc";
-    firstNonRepeating(s); // Output: a -1 b b
+    for(int i=1;i<=4;i++) insertEnd(i);
+    display();
+    reverseList();
+    display();
 }
