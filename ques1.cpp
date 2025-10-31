@@ -1,106 +1,160 @@
 #include <iostream>
 using namespace std;
 
-struct Node {
+struct DNode {
     int data;
-    Node* next;
+    DNode *prev, *next;
+    DNode(int val) : data(val), prev(NULL), next(NULL) {}
 };
 
-Node* head = NULL;
+struct CNode {
+    int data;
+    CNode *next;
+    CNode(int val) : data(val), next(NULL) {}
+};
 
-Node* createNode(int val) {
-    Node* newNode = new Node;
-    newNode->data = val;
-    newNode->next = NULL;
-    return newNode;
-}
-
-void insertAtBeginning(int val) {
-    Node* newNode = createNode(val);
-    newNode->next = head;
-    head = newNode;
-}
-
-void insertAtEnd(int val) {
-    Node* newNode = createNode(val);
-    if (!head) { head = newNode; return; }
-    Node* temp = head;
-    while (temp->next) temp = temp->next;
-    temp->next = newNode;
-}
-
-void insertBeforeValue(int val, int target) {
-    Node* newNode = createNode(val);
-    if (!head) return;
-    if (head->data == target) { newNode->next = head; head = newNode; return; }
-    Node* temp = head;
-    while (temp->next && temp->next->data != target) temp = temp->next;
-    if (temp->next) { newNode->next = temp->next; temp->next = newNode; }
-}
-
-void insertAfterValue(int val, int target) {
-    Node* temp = head;
-    while (temp && temp->data != target) temp = temp->next;
-    if (temp) { Node* newNode = createNode(val); newNode->next = temp->next; temp->next = newNode; }
-}
-
-void deleteFromBeginning() {
-    if (!head) return;
-    Node* temp = head;
-    head = head->next;
-    delete temp;
-}
-
-void deleteFromEnd() {
-    if (!head) return;
-    if (!head->next) { delete head; head = NULL; return; }
-    Node* temp = head;
-    while (temp->next->next) temp = temp->next;
-    delete temp->next;
-    temp->next = NULL;
-}
-
-void deleteSpecific(int val) {
-    if (!head) return;
-    if (head->data == val) { Node* temp = head; head = head->next; delete temp; return; }
-    Node* temp = head;
-    while (temp->next && temp->next->data != val) temp = temp->next;
-    if (temp->next) { Node* del = temp->next; temp->next = temp->next->next; delete del; }
-}
-
-void searchNode(int val) {
-    Node* temp = head;
-    int pos = 1;
-    while (temp) {
-        if (temp->data == val) { cout << "Node " << val << " found at position " << pos << endl; return; }
-        temp = temp->next; pos++;
+class DoublyLinkedList {
+    DNode *head;
+public:
+    DoublyLinkedList() { head = NULL; }
+    void insertFirst(int val) {
+        DNode *n = new DNode(val);
+        if (!head) head = n;
+        else { n->next = head; head->prev = n; head = n; }
     }
-    cout << "Node not found\n";
-}
+    void insertLast(int val) {
+        DNode *n = new DNode(val);
+        if (!head) head = n;
+        else { DNode *t = head; while (t->next) t = t->next; t->next = n; n->prev = t; }
+    }
+    void insertAfter(int key, int val) {
+        DNode *t = head;
+        while (t && t->data != key) t = t->next;
+        if (!t) { cout << "Not found\n"; return; }
+        DNode *n = new DNode(val);
+        n->next = t->next; n->prev = t;
+        if (t->next) t->next->prev = n;
+        t->next = n;
+    }
+    void insertBefore(int key, int val) {
+        if (!head) return;
+        if (head->data == key) { insertFirst(val); return; }
+        DNode *t = head;
+        while (t && t->data != key) t = t->next;
+        if (!t) { cout << "Not found\n"; return; }
+        DNode *n = new DNode(val);
+        n->next = t; n->prev = t->prev;
+        t->prev->next = n; t->prev = n;
+    }
+    void deleteNode(int key) {
+        DNode *t = head;
+        while (t && t->data != key) t = t->next;
+        if (!t) { cout << "Not found\n"; return; }
+        if (t->prev) t->prev->next = t->next; else head = t->next;
+        if (t->next) t->next->prev = t->prev;
+        delete t; cout << "Deleted\n";
+    }
+    void search(int key) {
+        DNode *t = head;
+        while (t && t->data != key) t = t->next;
+        if (t) cout << "Found\n"; else cout << "Not found\n";
+    }
+    void display() {
+        DNode *t = head; while (t) { cout << t->data << " "; t = t->next; } cout << endl;
+    }
+};
 
-void displayList() {
-    Node* temp = head;
-    while (temp) { cout << temp->data << " -> "; temp = temp->next; }
-    cout << "NULL\n";
-}
+class CircularLinkedList {
+    CNode *head;
+public:
+    CircularLinkedList() { head = NULL; }
+    void insertFirst(int val) {
+        CNode *n = new CNode(val);
+        if (!head) { head = n; n->next = n; }
+        else { CNode *t = head; while (t->next != head) t = t->next; n->next = head; t->next = n; head = n; }
+    }
+    void insertLast(int val) {
+        CNode *n = new CNode(val);
+        if (!head) { head = n; n->next = n; }
+        else { CNode *t = head; while (t->next != head) t = t->next; t->next = n; n->next = head; }
+    }
+    void insertAfter(int key, int val) {
+        if (!head) return;
+        CNode *t = head;
+        do {
+            if (t->data == key) {
+                CNode *n = new CNode(val);
+                n->next = t->next; t->next = n; return;
+            }
+            t = t->next;
+        } while (t != head);
+        cout << "Not found\n";
+    }
+    void insertBefore(int key, int val) {
+        if (!head) return;
+        CNode *cur = head, *prev = NULL;
+        do {
+            if (cur->data == key) {
+                CNode *n = new CNode(val);
+                n->next = cur;
+                if (prev) prev->next = n;
+                else { CNode *last = head; while (last->next != head) last = last->next; last->next = n; head = n; }
+                return;
+            }
+            prev = cur; cur = cur->next;
+        } while (cur != head);
+        cout << "Not found\n";
+    }
+    void deleteNode(int key) {
+        if (!head) return;
+        CNode *cur = head, *prev = NULL;
+        do {
+            if (cur->data == key) {
+                if (cur == head && cur->next == head) { head = NULL; }
+                else if (cur == head) {
+                    CNode *last = head; while (last->next != head) last = last->next;
+                    head = head->next; last->next = head;
+                } else prev->next = cur->next;
+                delete cur; cout << "Deleted\n"; return;
+            }
+            prev = cur; cur = cur->next;
+        } while (cur != head);
+        cout << "Not found\n";
+    }
+    void search(int key) {
+        if (!head) return;
+        CNode *t = head;
+        do { if (t->data == key) { cout << "Found\n"; return; } t = t->next; } while (t != head);
+        cout << "Not found\n";
+    }
+    void display() {
+        if (!head) return;
+        CNode *t = head;
+        do { cout << t->data << " "; t = t->next; } while (t != head);
+        cout << head->data << endl;
+    }
+};
 
 int main() {
-    int choice, val, target;
+    DoublyLinkedList dll;
+    CircularLinkedList cll;
+    int type, ch, val, key;
     while (true) {
-        cout << "\nMenu:\n1.Insert at beginning\n2.Insert at end\n3.Insert before value\n4.Insert after value\n5.Delete from beginning\n6.Delete from end\n7.Delete specific\n8.Search node\n9.Display list\n10.Exit\n";
-        cout << "Enter choice: "; cin >> choice;
-        switch(choice) {
-            case 1: cin >> val; insertAtBeginning(val); break;
-            case 2: cin >> val; insertAtEnd(val); break;
-            case 3: cin >> val >> target; insertBeforeValue(val,target); break;
-            case 4: cin >> val >> target; insertAfterValue(val,target); break;
-            case 5: deleteFromBeginning(); break;
-            case 6: deleteFromEnd(); break;
-            case 7: cin >> val; deleteSpecific(val); break;
-            case 8: cin >> val; searchNode(val); break;
-            case 9: displayList(); break;
-            case 10: return 0;
-            default: cout << "Invalid choice\n";
+        cout << "\n1.Doubly List 2.Circular List 3.Exit: "; cin >> type;
+        if (type == 3) break;
+        cout << "1.Insert First 2.Insert Last 3.Insert After 4.Insert Before 5.Delete 6.Search 7.Display 8.Back\n";
+        while (true) {
+            cout << "Enter choice: "; cin >> ch;
+            if (ch == 8) break;
+            switch (ch) {
+                case 1: cout << "Value: "; cin >> val; (type==1)?dll.insertFirst(val):cll.insertFirst(val); break;
+                case 2: cout << "Value: "; cin >> val; (type==1)?dll.insertLast(val):cll.insertLast(val); break;
+                case 3: cout << "After which? "; cin >> key; cout << "Value: "; cin >> val; (type==1)?dll.insertAfter(key,val):cll.insertAfter(key,val); break;
+                case 4: cout << "Before which? "; cin >> key; cout << "Value: "; cin >> val; (type==1)?dll.insertBefore(key,val):cll.insertBefore(key,val); break;
+                case 5: cout << "Delete value: "; cin >> key; (type==1)?dll.deleteNode(key):cll.deleteNode(key); break;
+                case 6: cout << "Search value: "; cin >> key; (type==1)?dll.search(key):cll.search(key); break;
+                case 7: (type==1)?dll.display():cll.display(); break;
+            }
         }
     }
 }

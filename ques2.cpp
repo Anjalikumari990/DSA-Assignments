@@ -3,38 +3,20 @@ using namespace std;
 
 struct Node {
     int data;
-    Node* next;
+    Node *next;
+    Node(int val) : data(val), next(NULL) {}
 };
-Node* head = NULL;
-
-void insertEnd(int val) {
-    Node* newNode = new Node{val,NULL};
-    if(!head){ head=newNode; return; }
-    Node* temp=head;
-    while(temp->next) temp=temp->next;
-    temp->next=newNode;
-}
-
-void display() {
-    Node* temp=head;
-    while(temp){ cout<<temp->data; if(temp->next) cout<<" -> "; temp=temp->next; }
-    cout<<endl;
-}
-
-void countAndDelete(int key) {
-    int count=0;
-    while(head && head->data==key){ Node* temp=head; head=head->next; delete temp; count++; }
-    Node* curr=head;
-    while(curr && curr->next){
-        if(curr->next->data==key){ Node* del=curr->next; curr->next=curr->next->next; delete del; count++; }
-        else curr=curr->next;
-    }
-    cout<<"Count: "<<count<<endl;
-}
 
 int main() {
-    insertEnd(1); insertEnd(2); insertEnd(1); insertEnd(2); insertEnd(1); insertEnd(3); insertEnd(1);
-    display();
-    countAndDelete(1);
-    display();
+    Node *head = NULL, *tail = NULL;
+    int arr[] = {20, 100, 40, 80, 60};
+    for (int x : arr) {
+        Node *n = new Node(x);
+        if (!head) { head = tail = n; }
+        else { tail->next = n; tail = n; }
+    }
+    tail->next = head;
+    Node *temp = head;
+    do { cout << temp->data << " "; temp = temp->next; } while (temp != head);
+    cout << head->data << endl;
 }

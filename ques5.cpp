@@ -1,53 +1,26 @@
 #include <iostream>
-#include <string.h>
 using namespace std;
 
-#define MAX 100
-int stackArr[MAX];
-int top = -1;
+struct Node {
+    int data;
+    Node *next;
+    Node(int val) : data(val), next(NULL) {}
+};
 
-void push(int x) {
-    if (top == MAX - 1) {
-        cout << "Stack Overflow\n";
-        return;
-    }
-    stackArr[++top] = x;
+bool isCircular(Node *head) {
+    if (!head) return true;
+    Node *temp = head->next;
+    while (temp && temp != head) temp = temp->next;
+    return (temp == head);
 }
 
-int pop() {
-    if (top == -1) {
-        cout << "Stack Underflow\n";
-        return -1;
-    }
-    return stackArr[top--];
-}
+int main() {
+    Node *head = new Node(10);
+    head->next = new Node(20);
+    head->next->next = new Node(30);
+    head->next->next->next = head; 
 
-int calc(int a, int b, char c){
-    switch(c){
-        case '+': return a + b; break;
-        case '-': return a - b; break;
-        case '*': return a * b; break;
-        case '/': return a / b; break;
-    }
-}
-
-int main(){
-    char s [100];
-    cout << "Enter your postfix function:";
-    cin >> s;
-
-    for(int i = 0; s[i] != 0; i++){
-        if(isdigit (s[i])){
-            s[i] = s[i] - '0';
-            push s[i];
-        }
-        if((s[i] == '*') || (s[i] == '/') || (s[i] == '+') || (s[i] == '-')){
-
-        }
-        int a = pop();
-        int b = pop();
-        c = calc(a, b, s[i]);
-        push(s);
-    }
-    
+    if (isCircular(head)) cout << "Circular Linked List";
+    else cout << "Not Circular Linked List";
+    return 0;
 }
