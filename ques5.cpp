@@ -1,26 +1,40 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-struct Node {
-    int data;
-    Node *next;
-    Node(int val) : data(val), next(NULL) {}
-};
+void heapify(int arr[], int n, int i){
+        int largest = i;
+        int left = 2*i;
+        int right = 2*i+1;
 
-bool isCircular(Node *head) {
-    if (!head) return true;
-    Node *temp = head->next;
-    while (temp && temp != head) temp = temp->next;
-    return (temp == head);
+        if(left <= n && arr[left] > arr[largest]){
+            largest = left;
+        }
+        if(right <= n && arr[right] > arr[largest]){
+             largest = right;
+        }
+
+        if(largest != i){
+            swap(arr[largest], arr[i]);
+            heapify(arr, n, largest);
+        }
+    }
+
+void heapsort(int arr[], int n){
+    int size = n;
+
+    while(size > 1){
+        swap(arr[size], arr[1]);
+        size--;
+
+        heapify(arr, size, 1);
+    }
 }
 
-int main() {
-    Node *head = new Node(10);
-    head->next = new Node(20);
-    head->next->next = new Node(30);
-    head->next->next->next = head; 
-
-    if (isCircular(head)) cout << "Circular Linked List";
-    else cout << "Not Circular Linked List";
-    return 0;
+int main(){
+    int n;
+    cin >> n;
+    int a[n];
+    for(int i=0;i<n;i++) cin >> a[i];
+    heapsort(a,n);
+    for(int i=0;i<n;i++) cout << a[i] << " ";
 }

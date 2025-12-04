@@ -1,40 +1,163 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-void improvedSelectionSort(int a[], int n) {
-    int left = 0, right = n - 1;
+class Node{
+    public:
+    int data;
+    Node *left, *right;
+    Node(int x){
+        data = x;
+        left = right = nullptr;
+    }
+};
 
-    while (left < right) {
-        int minVal = a[left], maxVal = a[left];
-        int minPos = left, maxPos = left;
+class bst{
+    public: 
+    Node* root;
+    bst(){
+        root = nullptr;
+    }
 
-        for (int i = left; i <= right; i++) {
-            if (a[i] < minVal) {
-                minVal = a[i];
-                minPos = i;
-            }
-            if (a[i] > maxVal) {
-                maxVal = a[i];
-                maxPos = i;
+    void preorder(Node* root){
+        if(!root){
+            return;
+        }
+        cout << root -> data << " ";
+        preorder(root -> left);
+        preorder(root -> right);
+    }
+
+    void inorder(Node* root){
+        if(!root){
+            return;
+        }
+        inorder(root -> left);
+        cout << root -> data << " ";
+        inorder(root -> right);
+    }
+
+    void postorder(Node* root){
+        if(!root){
+            return;
+        }
+        postorder(root -> left);
+        postorder(root -> right);
+        cout << root -> data << " ";
+    }
+
+    void create(){
+        int x;
+        cin >> x;
+        Node* p = root;
+        Node* q;
+
+        if(root == nullptr){
+            root = new Node(x);
+            return;
+        }
+        else{
+            q = new Node(x);
+            p = root;
+            while(true){
+                if(q -> data < p -> data){
+                    if(p -> left == nullptr){
+                        p -> left = q;
+                        break;
+                    }else{
+                        p = p -> left;
+                    }
+                }
+                else if(q -> data > p -> data){
+                    if(p -> right == nullptr){
+                        p -> right = q;
+                        break;
+                    }else{
+                        p = p -> right;
+                    }
+                }
             }
         }
-
-        swap(a[left], a[minPos]);
-
-        if (maxPos == left)
-            maxPos = minPos;
-
-        swap(a[right], a[maxPos]);
-
-        left++;
-        right--;
     }
-}
 
-int main() {
-    int n, a[100];
+    Node* search(Node* r, int x){
+        if(!r || r -> data == x){
+            return r;
+        }
+        if(x < r -> data){
+            return search(r -> left, x);
+        }
+        return search( r -> right, x);
+    }
+
+    int minimum(){
+        Node* p = root;
+        while(p -> left){
+            p = p -> left;
+        }
+        return p -> data;
+    }
+
+    int maximum(){
+        Node* p = root;
+        while(p -> right){
+            p = p -> right;
+        }
+        return p -> data;
+    }
+
+    Node* successor(int x){
+        Node* p = root;
+        Node* succ = nullptr;
+
+        while(p){
+            if(x < p-> data){
+                succ = p;
+                p = p -> left;
+            }
+            else{
+                p = p -> right;
+            }
+        }
+        return succ;
+    }
+
+    Node* predecessor(int x){
+        Node* p = root;
+        Node* pred = nullptr;
+
+        while(p){
+            if(x > p-> data){
+                pred = p;
+                p = p -> right;
+            }
+            else{
+                p = p -> left;
+            }
+        }
+        return pred;
+    }
+};
+
+int main(){
+    bst t;
+    int n;
     cin >> n;
-    for (int i = 0; i < n; i++) cin >> a[i];
-    improvedSelectionSort(a, n);
-    for (int i = 0; i < n; i++) cout << a[i] << " ";
+
+    for(int i = 0; i< n; i++){
+        t.create();
+    }
+
+    Node* ans = t.search(t.root, 40);
+    if(ans){
+        cout << ans-> data;
+    }else{
+        cout << "not found";
+    }
+
+    cout << t.minimum() << endl;
+    cout << t.maximum() << endl;
+    cout << t.successor(40)->data << endl;
+    cout << t.predecessor(40)->data << endl;
+
+    return 0;
 }

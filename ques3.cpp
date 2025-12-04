@@ -1,42 +1,88 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-struct DNode {
+class Node{
+public:
     int data;
-    DNode *next, *prev;
-    DNode(int val):data(val),next(NULL),prev(NULL){}
+    Node *left, *right;
+    Node(int x){
+        data = x;
+        left = right = nullptr;
+    }
 };
 
-struct CNode {
-    int data;
-    CNode *next;
-    CNode(int val):data(val),next(NULL){}
+class BST{
+public:
+    Node* root;
+    BST(){
+        root = nullptr;
+    }
+
+    Node* insert(Node* r, int x){
+        if(!r){
+            return new Node(x);
+        }
+        if(x < r->data){
+            r->left = insert(r->left, x);
+        }else{
+            r->right = insert(r->right, x);
+        }
+        return r;
+    }
+
+    Node* minNode(Node* r){
+        while(r->left){
+            r = r->left;
+        }
+        return r;
+    }
+
+    Node* deleteNode(Node* r, int x){
+        if(!r){
+            return r;
+        }
+        if(x < r->data){
+            r->left = deleteNode(r->left, x);
+        }
+        else if{
+            (x > r->data) r->right = deleteNode(r->right, x);
+        }else{
+            if(!r->left) return r->right;
+            if(!r->right) return r->left;
+            Node* t = minNode(r->right);
+            r->data = t->data;
+            r->right = deleteNode(r->right, t->data);
+        }
+        return r;
+    }
+
+    int maxDepth(Node* r){
+        if(!r){
+            return 0;
+        }
+        int l = maxDepth(r->left);
+        int r1 = maxDepth(r->right);
+        return (l > r1 ? l : r1) + 1;
+    }
+
+    int minDepth(Node* r){
+        if(!r){
+            return 0;
+        }
+        int l = minDepth(r->left);
+        int r1 = minDepth(r->right);
+        return (l < r1 ? l : r1) + 1;
+    }
 };
 
-int sizeDoubly(DNode *head) {
-    int count = 0;
-    while (head) { count++; head = head->next; }
-    return count;
-}
+int main(){
+    BST t;
+    t.root = t.insert(t.root, 50);
+    t.root = t.insert(t.root, 30);
+    t.root = t.insert(t.root, 70);
 
-int sizeCircular(CNode *head) {
-    if (!head) return 0;
-    int count = 0;
-    CNode *temp = head;
-    do { count++; temp = temp->next; } while (temp != head);
-    return count;
-}
+    t.root = t.deleteNode(t.root, 30);
 
-int main() {
-    DNode *d1 = new DNode(10);
-    d1->next = new DNode(20);
-    d1->next->prev = d1;
-    d1->next->next = new DNode(30);
-    cout << "Size of Doubly Linked List = " << sizeDoubly(d1) << endl;
-
-    CNode *c1 = new CNode(5);
-    c1->next = new CNode(15);
-    c1->next->next = new CNode(25);
-    c1->next->next->next = c1;
-    cout << "Size of Circular Linked List = " << sizeCircular(c1) << endl;
+    cout << t.maxDepth(t.root) << endl;
+    cout << t.minDepth(t.root) << endl;
 }

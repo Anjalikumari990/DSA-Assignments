@@ -1,46 +1,50 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-struct Node {
-    char data;
-    Node *prev, *next;
-    Node(char c) : data(c), prev(NULL), next(NULL) {}
-};
-
-class DoublyLinkedList {
-    Node *head, *tail;
+class Node{
 public:
-    DoublyLinkedList() { head = tail = NULL; }
-
-    void insert(char c) {
-        Node *n = new Node(c);
-        if (!head) head = tail = n;
-        else {
-            tail->next = n;
-            n->prev = tail;
-            tail = n;
-        }
-    }
-
-    bool isPalindrome() {
-        if (!head) return true;
-        Node *left = head, *right = tail;
-        while (left != right && right->next != left) {
-            if (left->data != right->data) return false;
-            left = left->next;
-            right = right->prev;
-        }
-        return true;
+    int data;
+    Node *left, *right;
+    Node(int x){
+        data = x;
+        left = right = nullptr;
     }
 };
 
-int main() {
-    DoublyLinkedList list;
-    string s;
-    cout << "Enter string: ";
-    cin >> s;
-    for (char c : s) list.insert(c);
-    if (list.isPalindrome()) cout << "Palindrome";
-    else cout << "Not Palindrome";
-    return 0;
+class Tree{
+public:
+    Node* root;
+    Tree(){
+        root = nullptr;
+    }
+
+    Node* insert(Node* r, int x){
+        if(!r){
+            return new Node(x);
+        }
+        if(x < r->data){
+            r->left = insert(r->left, x);
+        }else{
+            r->right = insert(r->right, x);
+        }
+        return r;
+    }
+
+    bool check(Node* r, int min, int max){
+        if(!r){
+            return true;
+        }
+        if(r->data <= min || r->data >= max){
+            return false;
+        }
+        return check(r->left, min, r->data) && check(r->right, r->data, max);
+    }
+};
+
+int main(){
+    Tree t;
+    t.root = t.insert(t.root, 5);
+    t.root = t.insert(t.root, 3);
+    t.root = t.insert(t.root, 9);
+    cout << t.check(t.root, -100000, 100000);
 }
