@@ -1,22 +1,40 @@
 #include <iostream>
 using namespace std;
 
-struct Node {
-    int data;
-    Node *next;
-    Node(int val) : data(val), next(NULL) {}
-};
+void improvedSelectionSort(int a[], int n) {
+    int left = 0, right = n - 1;
+
+    while (left < right) {
+        int minVal = a[left], maxVal = a[left];
+        int minPos = left, maxPos = left;
+
+        for (int i = left; i <= right; i++) {
+            if (a[i] < minVal) {
+                minVal = a[i];
+                minPos = i;
+            }
+            if (a[i] > maxVal) {
+                maxVal = a[i];
+                maxPos = i;
+            }
+        }
+
+        swap(a[left], a[minPos]);
+
+        if (maxPos == left)
+            maxPos = minPos;
+
+        swap(a[right], a[maxPos]);
+
+        left++;
+        right--;
+    }
+}
 
 int main() {
-    Node *head = NULL, *tail = NULL;
-    int arr[] = {20, 100, 40, 80, 60};
-    for (int x : arr) {
-        Node *n = new Node(x);
-        if (!head) { head = tail = n; }
-        else { tail->next = n; tail = n; }
-    }
-    tail->next = head;
-    Node *temp = head;
-    do { cout << temp->data << " "; temp = temp->next; } while (temp != head);
-    cout << head->data << endl;
+    int n, a[100];
+    cin >> n;
+    for (int i = 0; i < n; i++) cin >> a[i];
+    improvedSelectionSort(a, n);
+    for (int i = 0; i < n; i++) cout << a[i] << " ";
 }
